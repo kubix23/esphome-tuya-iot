@@ -289,23 +289,23 @@ namespace esphome {
 
         char username[200];
         sprintf(username, "%s|signMethod=hmacSha256,timestamp=%d,secureMode=1,accessType=1", device_id_, now);
-        mqtt_cfg_.username = username;
-        ESP_LOGD(TAG, "username: %s", mqtt_cfg_.username);
+        mqtt_cfg_.credentials.username = username;
+        ESP_LOGD(TAG, "username: %s", mqtt_cfg_.credentials.username);
 
         char* password_str = new char[254];
         password_str[password.copy(password_str, password.size(), 0)] = '\0';
-        mqtt_cfg_.password = password_str;
-        ESP_LOGD(TAG, "password: %s", mqtt_cfg_.password);
+        mqtt_cfg_.credentials.authentication.password = password_str;
+        ESP_LOGD(TAG, "password: %s", mqtt_cfg_.credentials.authentication.password);
 
         static char uri[50];
         sprintf(uri, "mqtts://%s:8883", region_domain_);
-        mqtt_cfg_.uri = uri;
-        mqtt_cfg_.cert_pem = tuya_cacert_pem;
-        mqtt_cfg_.cert_len = sizeof(tuya_cacert_pem);
+        mqtt_cfg_.broker.address.uri = uri;
+        mqtt_cfg_.broker.verification.certificate = tuya_cacert_pem;
+        mqtt_cfg_.broker.verification.certificate_len = sizeof(tuya_cacert_pem);
         mqtt_cfg_.skip_cert_common_name_check = true;
         mqtt_cfg_.use_global_ca_store = false;
         // mqtt_cfg_.transport = MQTT_TRANSPORT_OVER_SSL;
-        mqtt_cfg_.protocol_ver = MQTT_PROTOCOL_V_3_1_1;
+        mqtt_cfg_.session.protocol_ver = MQTT_PROTOCOL_V_3_1_1;
         static char client_id[50];
         sprintf(client_id, "tuyalink_%s", device_id_);
         mqtt_cfg_.client_id = client_id;
