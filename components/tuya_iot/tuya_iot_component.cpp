@@ -302,13 +302,13 @@ namespace esphome {
         mqtt_cfg_.broker.address.uri = uri;
         mqtt_cfg_.broker.verification.certificate = tuya_cacert_pem;
         mqtt_cfg_.broker.verification.certificate_len = sizeof(tuya_cacert_pem);
-        mqtt_cfg_.skip_cert_common_name_check = true;
-        mqtt_cfg_.use_global_ca_store = false;
+        mqtt_cfg_.broker.verification.skip_cert_common_name_check = true;
+        mqtt_cfg_.broker.verification.use_global_ca_store = false;
         // mqtt_cfg_.transport = MQTT_TRANSPORT_OVER_SSL;
         mqtt_cfg_.session.protocol_ver = MQTT_PROTOCOL_V_3_1_1;
         static char client_id[50];
         sprintf(client_id, "tuyalink_%s", device_id_);
-        mqtt_cfg_.client_id = client_id;
+        mqtt_cfg_.credentials.client_id = client_id;
         client_ = esp_mqtt_client_init(&mqtt_cfg_);
 
         if (client_) {
