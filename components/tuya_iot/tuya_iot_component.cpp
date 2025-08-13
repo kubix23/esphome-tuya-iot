@@ -289,17 +289,17 @@ namespace esphome {
 
         char username[200];
         sprintf(username, "%s|signMethod=hmacSha256,timestamp=%d,secureMode=1,accessType=1", device_id_, now);
-        mqtt_cfg_.credentials.username = username;
+        mqtt_cfg_.credentials.username = username.c_str();
         ESP_LOGD(TAG, "username: %s", mqtt_cfg_.credentials.username);
 
         char* password_str = new char[254];
         password_str[password.copy(password_str, password.size(), 0)] = '\0';
-        mqtt_cfg_.credentials.authentication.password = password_str;
+        mqtt_cfg_.credentials.authentication.password = password_str.c_str();
         ESP_LOGD(TAG, "password: %s", mqtt_cfg_.credentials.authentication.password);
 
         static char uri[50];
         sprintf(uri, "mqtts://%s:8883", region_domain_);
-        mqtt_cfg_.broker.address.uri = uri;
+        mqtt_cfg_.broker.address.uri = uri.c_str();
         mqtt_cfg_.broker.verification.certificate = tuya_cacert_pem;
         mqtt_cfg_.broker.verification.certificate_len = sizeof(tuya_cacert_pem);
         mqtt_cfg_.broker.verification.skip_cert_common_name_check = true;
@@ -308,7 +308,7 @@ namespace esphome {
         mqtt_cfg_.session.protocol_ver = MQTT_PROTOCOL_V_3_1_1;
         static char client_id[50];
         sprintf(client_id, "tuyalink_%s", device_id_);
-        mqtt_cfg_.credentials.client_id = client_id;
+        mqtt_cfg_.credentials.client_id = client_id.c_str();
         client_ = esp_mqtt_client_init(&mqtt_cfg_);
 
         if (client_) {
