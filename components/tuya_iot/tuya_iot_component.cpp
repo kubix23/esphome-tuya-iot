@@ -259,7 +259,7 @@ namespace esphome {
         root["data"]["eventCode"] = key;
         root["data"]["eventTime"] = now;
         for(int i = 0; i < size; i++){
-          root["data"]["outputParams"][keys[i]] = values[i]
+          root["data"]["outputParams"][keys[i]] = values[i];
         }
       };
       std::string topic = std::string("tylink/") + std::string(this->device_id_) + std::string("/thing/event/trigger");
@@ -275,7 +275,7 @@ namespace esphome {
         root["data"]["eventCode"] = key;
         root["data"]["eventTime"] = now;
         for(int i = 0; i < size; i++){
-          root["data"]["outputParams"][keys[i]] = values[i]
+          root["data"]["outputParams"][keys[i]] = values[i];
         }
       };
       std::string topic = std::string("tylink/") + std::string(this->device_id_) + std::string("/thing/event/trigger");
