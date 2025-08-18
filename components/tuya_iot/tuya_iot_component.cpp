@@ -137,7 +137,7 @@ namespace esphome {
       if (sub->subscribed)
         return;
 
-      sub->subscribed = this->subscribe_(sub->topic, sub->qos);
+      sub->subscribed = this->subscribe_(sub->topic.c_str(), sub->qos);
     }
 
     // Subscribe
@@ -191,7 +191,7 @@ namespace esphome {
         // critical components will re-transmit their messages
         return false;
       }
-      bool ret = esp_mqtt_client_publish(client_, message.topic, message.payload, message.payload.size(), message.qos, message.retain) != -1;
+      bool ret = esp_mqtt_client_publish(client_, message.topic.c_str(), message.payload.c_str(), message.payload.size(), message.qos, message.retain) != -1;
       if (ret) {
         ESP_LOGD(TAG, "publich succ, topic=%s, payload=%s", message.topic, message.payload);
       } else {
