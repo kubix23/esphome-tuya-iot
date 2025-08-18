@@ -84,6 +84,7 @@ namespace esphome {
       bool property_report(const std::string &key, const bool &value);
       bool event_send_messages(const std::string &key, std::string keys[], std::string values[], int size);
       bool event_send_messages(const std::string &key, std::string keys[], bool values[], int size);
+      bool event_send_messages(const std::string &key);
 
 
       std::string gen_msg_id();

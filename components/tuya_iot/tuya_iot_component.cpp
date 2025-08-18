@@ -282,6 +282,19 @@ namespace esphome {
       return this->publish_json(topic, f, 0, false);
     }
 
+    bool  TuyaIotComponent::event_send_messages(const std::string &key) {
+      auto msgId = gen_msg_id();
+      auto now = time_->now().timestamp;
+      json::json_build_t f = [=](JsonObject root) {
+        root["msgId"] = msgId;
+        root["time"] = now;
+        root["data"]["eventCode"] = key;
+        root["data"]["eventTime"] = now;
+      };
+      std::string topic = std::string("tylink/") + std::string(this->device_id_) + std::string("/thing/event/trigger");
+      return this->publish_json(topic, f, 0, false);
+    }
+
     std::string TuyaIotComponent::gen_msg_id() {
       static const char alphanum[] =
         "0123456789"
