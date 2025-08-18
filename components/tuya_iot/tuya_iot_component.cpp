@@ -247,7 +247,7 @@ namespace esphome {
         root["time"] = now;
         root["data"][key] = value;
       };
-      return this->publish(f, 0, false);
+      return this->property_report_json(f, 0, false);
     }
 
     bool  TuyaIotComponent::event_send_messages(const std::string &key, std::string keys[], std::string values[], int size) {
@@ -263,7 +263,7 @@ namespace esphome {
         }
       };
       std::string topic = std::string("tylink/") + std::string(this->device_id_) + std::string("/thing/event/trigger");
-      return this->publish(topic, value, 0, false);
+      return this->publish_json(topic, value, 0, false);
     }
 
     bool  TuyaIotComponent::event_send_messages(const std::string &key, std::string keys[], bool values[], int size) {
@@ -279,7 +279,7 @@ namespace esphome {
         }
       };
       std::string topic = std::string("tylink/") + std::string(this->device_id_) + std::string("/thing/event/trigger");
-      return this->publish(topic, value, 0, false);
+      return this->publish_json(topic, value, 0, false);
     }
 
     std::string TuyaIotComponent::gen_msg_id() {
