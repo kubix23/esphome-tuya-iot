@@ -250,25 +250,33 @@ namespace esphome {
       return this->publish(f, 0, false);
     }
 
-    bool  TuyaIotComponent::event_send_messages(const std::string &key, const std::string &value) {
+    bool  TuyaIotComponent::event_send_messages(const std::string &key, std::string keys[], std::string values[], int size) {
       auto msgId = gen_msg_id();
       auto now = time_->now().timestamp;
       json::json_build_t f = [=](JsonObject root) {
         root["msgId"] = msgId;
         root["time"] = now;
-        root["data"][key] = value;
+        root["data"]["eventCode"] = key;
+        root["data"]["eventTime"] = now;
+        for(int i = 0; i < size; i++){
+          root["data"]["outputParams"][keys[i]] = values[i]
+        }
       };
       std::string topic = std::string("tylink/") + std::string(this->device_id_) + std::string("/thing/event/trigger");
       return this->publish(topic, value, 0, false);
     }
 
-    bool  TuyaIotComponent::event_send_messages(const std::string &key, const bool &value) {
+    bool  TuyaIotComponent::event_send_messages(const std::string &key, std::string keys[], bool values[], int size) {
       auto msgId = gen_msg_id();
       auto now = time_->now().timestamp;
       json::json_build_t f = [=](JsonObject root) {
         root["msgId"] = msgId;
         root["time"] = now;
-        root["data"][key] = value;
+        root["data"]["eventCode"] = key;
+        root["data"]["eventTime"] = now;
+        for(int i = 0; i < size; i++){
+          root["data"]["outputParams"][keys[i]] = values[i]
+        }
       };
       std::string topic = std::string("tylink/") + std::string(this->device_id_) + std::string("/thing/event/trigger");
       return this->publish(topic, value, 0, false);
