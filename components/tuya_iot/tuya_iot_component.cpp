@@ -87,7 +87,7 @@ namespace esphome {
         if (event.topic.length() > 0) {
           topic = event.topic;
         }
-        ESP_LOGD(TAG, "MQTT_EVENT_DATA topic=%s", topic.c_str());
+        ESP_LOGD(TAG, "MQTT_EVENT_DATA topic=%s", topic);
 
         if (event.current_data_offset == 0) {
           this->payload_buffer_.reserve(event.total_data_len);
@@ -96,14 +96,14 @@ namespace esphome {
         this->payload_buffer_.append(event.data.data(), event.data.size());
 
         if (event.data.size() + event.current_data_offset == event.total_data_len) {
-          ESP_LOGD(TAG, "MQTT_EVENT_DATA data=%s", this->payload_buffer_.c_str());
+          ESP_LOGD(TAG, "MQTT_EVENT_DATA data=%s", this->payload_buffer_);
 
           for (auto &subscription : this->subscriptions_) {
             if (topic.compare(subscription.topic) == 0) {
-              // ESP_LOGD(TAG, "equal, topic=%s, sub=%s", topic.c_str(), subscription.topic.c_str());
+              // ESP_LOGD(TAG, "equal, topic=%s, sub=%s", topic, subscription.topic);
               subscription.callback(topic, std::string(this->payload_buffer_));
             } else {
-              // ESP_LOGD(TAG, "not equal, topic=%s, sub=%s", topic.c_str(), subscription.topic.c_str());
+              // ESP_LOGD(TAG, "not equal, topic=%s, sub=%s", topic, subscription.topic);
             }
           }
 
@@ -137,7 +137,7 @@ namespace esphome {
       if (sub->subscribed)
         return;
 
-      sub->subscribed = this->subscribe_(sub->topic.c_str(), sub->qos);
+      sub->subscribed = this->subscribe_(sub->topic, sub->qos);
     }
 
     // Subscribe
@@ -191,11 +191,11 @@ namespace esphome {
         // critical components will re-transmit their messages
         return false;
       }
-      bool ret = esp_mqtt_client_publish(client_, message.topic.c_str(), message.payload.c_str(), message.payload.size(), message.qos, message.retain) != -1;
+      bool ret = esp_mqtt_client_publish(client_, message.topic, message.payload, message.payload.size(), message.qos, message.retain) != -1;
       if (ret) {
-        ESP_LOGD(TAG, "publich succ, topic=%s, payload=%s", message.topic.c_str(), message.payload.c_str());
+        ESP_LOGD(TAG, "publich succ, topic=%s, payload=%s", message.topic, message.payload);
       } else {
-        ESP_LOGD(TAG, "publich fail, topic=%s, payload=%s", message.topic.c_str(), message.payload.c_str());
+        ESP_LOGD(TAG, "publich fail, topic=%s, payload=%s", message.topic, message.payload);
       }
       delay(0);
       return ret;
@@ -334,17 +334,17 @@ namespace esphome {
 
         char username[200];
         sprintf(username, "%s|signMethod=hmacSha256,timestamp=%d,secureMode=1,accessType=1", device_id_, now);
-        mqtt_cfg_.credentials.username = username.c_str();
+        mqtt_cfg_.credentials.username = username;
         ESP_LOGD(TAG, "username: %s", mqtt_cfg_.credentials.username);
 
         char* password_str = new char[254];
         password_str[password.copy(password_str, password.size(), 0)] = '\0';
-        mqtt_cfg_.credentials.authentication.password = password_str.c_str();
+        mqtt_cfg_.credentials.authentication.password = password_str;
         ESP_LOGD(TAG, "password: %s", mqtt_cfg_.credentials.authentication.password);
 
         static char uri[50];
         sprintf(uri, "mqtts://%s:8883", region_domain_);
-        mqtt_cfg_.broker.address.uri = uri.c_str();
+        mqtt_cfg_.broker.address.uri = uri;
         mqtt_cfg_.broker.verification.certificate = tuya_cacert_pem;
         mqtt_cfg_.broker.verification.certificate_len = sizeof(tuya_cacert_pem);
         mqtt_cfg_.broker.verification.skip_cert_common_name_check = true;
@@ -353,7 +353,7 @@ namespace esphome {
         mqtt_cfg_.session.protocol_ver = MQTT_PROTOCOL_V_3_1_1;
         static char client_id[50];
         sprintf(client_id, "tuyalink_%s", device_id_);
-        mqtt_cfg_.credentials.client_id = client_id.c_str();
+        mqtt_cfg_.credentials.client_id = client_id;
         client_ = esp_mqtt_client_init(&mqtt_cfg_);
 
         if (client_) {
@@ -391,7 +391,7 @@ namespace esphome {
     }
     void TuyaIotMessageTrigger::dump_config() {
       ESP_LOGCONFIG(TAG, "MQTT Message Trigger:");
-      ESP_LOGCONFIG(TAG, "  Topic: '%s'", this->topic_.c_str());
+      ESP_LOGCONFIG(TAG, "  Topic: '%s'", this->topic_);
       ESP_LOGCONFIG(TAG, "  QoS: %u", this->qos_);
     }
     float TuyaIotMessageTrigger::get_setup_priority() const { return setup_priority::AFTER_CONNECTION; }
